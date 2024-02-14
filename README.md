@@ -8,7 +8,7 @@ This project aims to maintain a Dockerfile to run incus in a docker/podman conta
 It also installs the incus-ui-canonical to have a Web-based UI.
 
 We will eventually move to being alpine-based to keep the size smaller, but at the moment, due to issues with incus-agent on alpine, are basing on debian/bookworm.
-We are using the version maintained here:
+We are using the version of incus maintained here:
 https://github.com/zabbly/incus
 
 How to use it:
