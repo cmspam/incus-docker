@@ -5,7 +5,7 @@ Incus is a fork of lxd. Please see here:
 https://linuxcontainers.org/incus/
 
 This project aims to maintain a Dockerfile to run incus in a docker/podman container.
-It also installs the incus-webui-canonical to have a Web-based UI.
+It also installs the incus-ui-canonical to have a Web-based UI.
 
 We will eventually move to being alpine-based to keep the size smaller, but at the moment, due to issues with incus-agent on alpine, are basing on debian/bookworm.
 We are using the version maintained here:
