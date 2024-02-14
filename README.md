@@ -39,9 +39,14 @@ https://github.com/lxc/incus/releases
 
 For example, I use bin.linux.incus.x86_64 from the Assets at the above link.
 
-You can then run chmod +x bin.linux.incus.x86_64 to make it executable. Let's rename it to incus by running mv bin.linux.incus.x86_64 incus
+You can then run chmod +x bin.linux.incus.x86_64 to make it executable. Let's rename it to incus by running 
+
+mv bin.linux.incus.x86_64 incus
+
 Now we can check it's working by running
+
 ./incus admin init
+
 And we can proceed to configure incus.
 
 I find it easiest to move the binary to /usr/local/bin so that I can just run "incus admin init" or whatever else.
