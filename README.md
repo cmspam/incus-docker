@@ -13,14 +13,15 @@ https://github.com/zabbly/incus
 
 How to use it:
 
-*If you want to use the image from docker hub*
+# If you want to use the image from docker hub
+
 See the instructions here:
 
 https://hub.docker.com/r/cmspam/incus-docker
 
-*If you want to build the dockerfile yourself*
+# If you want to build the Dockerfile yourself
 
-Place the dockerfile somewhere, and run:
+Place the Dockerfile somewhere, and run:
 
 **docker build -t incus-docker .**
 
