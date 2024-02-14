@@ -28,15 +28,15 @@ Then, run the docker image. It will not work unless run as privileged. You will 
 
 **mkdir /var/lib/incus**
 
-**docker run -d \\
---name incus \\
---privileged \\
---restart unless-stopped \\
---device /dev/kvm \\
---device /dev/vsock \\
---network host \\
---volume /var/lib/incus:/var/lib/incus \\
---volume /lib/modules:/lib/modules:ro \\
+**docker run -d \\\
+--name incus \\\
+--privileged \\\
+--restart unless-stopped \\\
+--device /dev/kvm \\\
+--device /dev/vsock \\\
+--network host \\\
+--volume /var/lib/incus:/var/lib/incus \\\
+--volume /lib/modules:/lib/modules:ro \\\
 incus-docker**
 
 
