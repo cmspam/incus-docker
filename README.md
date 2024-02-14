@@ -13,24 +13,31 @@ https://github.com/zabbly/incus
 
 How to use it:
 
+(If you want to use the image from docker hub)
+See the instructions here:
+
+https://hub.docker.com/r/cmspam/incus-docker
+
+(If you want to build the dockerfile yourself)
+
 Place the dockerfile somewhere, and run:
 
-docker build -t cmspam/incus-docker .
+docker build -t incus-docker .
 
 Then, run the docker image. It will not work unless run as privileged. You will want to provide your own /var/lib/incus directory, and to allow it to automatically load the necessary modules when launching a VM (kvm and vsock_vhost) you may also want to give it your /lib/modules directory. Finally, because of incus's networking features, you will probably want to use host networking.  Therefore, you can do something like this on first run:
 
 mkdir /var/lib/incus
 
-docker run -d \
---name incus \
---privileged \
---restart unless-stopped \
---device /dev/kvm \
---device /dev/vsock \
---network host \
---volume /var/lib/incus:/var/lib/incus \
---volume /lib/modules:/lib/modules:ro \
-cmspam/incus-docker
+docker run -d \\
+--name incus \\
+--privileged \\
+--restart unless-stopped \\
+--device /dev/kvm \\
+--device /dev/vsock \\
+--network host \\
+--volume /var/lib/incus:/var/lib/incus \\
+--volume /lib/modules:/lib/modules:ro \\
+incus-docker
 
 
 After you start the container, incus will be running. If you used the folder I suggested and used host networking, you can manage it immediately with the incus binary from the same machine. Grab the binary from the latest releases here:
