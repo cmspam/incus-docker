@@ -5,6 +5,7 @@ Incus is a fork of lxd. Please see here:
 https://linuxcontainers.org/incus/
 
 This project aims to maintain a Dockerfile to run incus in a docker/podman container.
+It also installs the incus-webui-canonical to have a Web-based UI.
 
 We will eventually move to being alpine-based to keep the size smaller, but at the moment, due to issues with incus-agent on alpine, are basing on debian/bookworm.
 We are using the version maintained here:
@@ -45,4 +46,6 @@ And we can proceed to configure incus.
 
 I find it easiest to move the binary to /usr/local/bin so that I can just run "incus admin init" or whatever else.
 
-Although I have tested only on x86-64 as of yet, I believe it should work also with aarch64, though maybe not with vm support.
+If you configure it to be manageable from the network, we can access the web UI, at https://{YOUR IP}:8443
+
+Although I have tested only on x86-64 as of yet, I believe it should work also with aarch64, though maybe not with vm support. I have tested btrfs support successfully, but have not implemented zfs support. A small modification of the dockerfile should allow it though.
