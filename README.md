@@ -15,7 +15,7 @@ For alpine, we use the version in edge/testing -- it could be unstable.
 
 How to use it:
 
-*Note*: If you use the environment variable SETIPTABLES=true, it will be adding:\
+*Note*: If you use the environment variable SETIPTABLES=true, it will be adding:
 ```
 iptables-legacy -I DOCKER-USER -j ACCEPT
 ip6tables-legacy -I DOCKER-USER -j ACCEPT
