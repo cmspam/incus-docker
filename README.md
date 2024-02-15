@@ -68,7 +68,7 @@ podman run -d \
 incus-docker
 ```
 
-NOTE: If you are using the alpine version, in most cases, you can't depend on the ability to load the modules automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
+NOTE: If you are using the alpine version, in most cases, you can't depend on the ability to load the modules for VMs automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
 
 ```
 echo "vhost_vsock" > /etc/modules-load.d/incus.conf
