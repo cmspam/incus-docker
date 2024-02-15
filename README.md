@@ -17,7 +17,7 @@ How to use it:
 
 *Note*: If you use the environment variable SETIPTABLES=true, it will be adding:\
 ```
-iptables-legacy -I DOCKER-USER -j ACCEPT\
+iptables-legacy -I DOCKER-USER -j ACCEPT
 ip6tables-legacy -I DOCKER-USER -j ACCEPT
 ```
 
@@ -38,8 +38,9 @@ Place the Dockerfile somewhere, and run:
 
 Then, run the docker image. It will not work unless run as privileged. You will want to provide your own /var/lib/incus directory, and to allow it to automatically load the necessary modules when launching a VM (kvm and vsock_vhost) you may also want to give it your /lib/modules directory. Finally, because of incus's networking features, you will probably want to use host networking.  Therefore, you can do something like this on first run:
 
-```mkdir /var/lib/incus
+``` mkdir /var/lib/incus ```
 
+```
 docker run -d \
 --name incus \
 --privileged \
@@ -50,11 +51,13 @@ docker run -d \
 --network host \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
-incus-docker```
+incus-docker
+```
 
 or for podman
 
-```podman run -d \
+```
+podman run -d \
 --name incus \
 --privileged \
 --device /dev/kvm \
@@ -62,7 +65,8 @@ or for podman
 --network host \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
-incus-docker```
+incus-docker
+```
 
 NOTE: If you are using the alpine version, in most cases, you can't depend on the ability to load the modules automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
 
