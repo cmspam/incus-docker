@@ -26,8 +26,14 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo 'export INCUS_LXC_HOOK="/opt/incus/share/lxc/hooks/"' >> /start.sh && \
     echo 'export INCUS_AGENT_PATH="/opt/incus/agent/"' >> /start.sh && \
     echo 'export INCUS_UI="/opt/incus/ui/"' >> /start.sh && \
+    echo 'if [ "$SETIPTABLES" = "true" ]; then' >> /start.sh && \
+    echo 'if ! iptables-legacy -C DOCKER-USER -j ACCEPT &>/dev/null; then' >> /start.sh && \
     echo 'iptables-legacy -I DOCKER-USER -j ACCEPT' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
+    echo 'if ! ip6tables-legacy -C DOCKER-USER -j ACCEPT &>/dev/null; then' >> /start.sh && \
     echo 'ip6tables-legacy -I DOCKER-USER -j ACCEPT' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
     echo '/opt/incus/bin/incusd' >> /start.sh && \
     chmod +x /start.sh
 
