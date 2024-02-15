@@ -13,8 +13,8 @@ https://github.com/zabbly/incus
 
 How to use it:
 
-*Note*: This image will modify your iptables when run privileged, adding:
-iptables-legacy -I DOCKER-USER -j ACCEPT
+*Note*: This image will modify your iptables when run privileged, adding:\
+iptables-legacy -I DOCKER-USER -j ACCEPT\
 ip6tables-legacy -I DOCKER-USER -j ACCEPT
 
 The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet.
