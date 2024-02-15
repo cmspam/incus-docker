@@ -7,9 +7,11 @@ https://linuxcontainers.org/incus/
 This project aims to maintain a Dockerfile to run incus in a docker/podman container.
 It also installs the incus-ui-canonical to have a Web-based UI.
 
-We will eventually move to being alpine-based to keep the size smaller, but at the moment, due to issues with incus-agent on alpine, are basing on debian/bookworm.
-We are using the version of incus maintained here:
+We now have a debian-based (Dockerfile) and an alpine-based (Dockerfile-alpine) option available.
+For debian, we are using the version of incus maintained here:
 https://github.com/zabbly/incus
+
+For alpine, we use the version in edge/testing -- it could be unstable.
 
 How to use it:
 
@@ -59,6 +61,13 @@ or for podman
 --volume /var/lib/incus:/var/lib/incus \\\
 --volume /lib/modules:/lib/modules:ro \\\
 incus-docker**
+
+NOTE: If you are using the alpine version, in most cases, you can't depend on the ability to load the modules automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
+
+```
+echo "vhost_vsock" > /etc/modules-load.d/incus.conf
+echo "kvm" >> /etc/modules-load.d/incus.conf
+```
 
 
 After you start the container, incus will be running. If you used the folder I suggested and used host networking, you can manage it immediately with the incus binary from the same machine. Grab the binary from the latest releases here:
