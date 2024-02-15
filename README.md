@@ -13,11 +13,11 @@ https://github.com/zabbly/incus
 
 How to use it:
 
-*Note*: This image will modify your iptables when run privileged, adding:\
+*Note*: If you use the environment variable SETIPTABLES=true, it will be adding:\
 iptables-legacy -I DOCKER-USER -j ACCEPT\
 ip6tables-legacy -I DOCKER-USER -j ACCEPT
 
-The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet.
+The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet. If you use podman, it's not needed from my testing.
 
 
 # If you want to use the image from docker hub
@@ -39,7 +39,20 @@ Then, run the docker image. It will not work unless run as privileged. You will 
 **docker run -d \\\
 --name incus \\\
 --privileged \\\
+--env SETIPTABLES=true \\\
 --restart unless-stopped \\\
+--device /dev/kvm \\\
+--device /dev/vsock \\\
+--network host \\\
+--volume /var/lib/incus:/var/lib/incus \\\
+--volume /lib/modules:/lib/modules:ro \\\
+incus-docker**
+
+or for podman
+
+**podman run -d \\\
+--name incus \\\
+--privileged \\\
 --device /dev/kvm \\\
 --device /dev/vsock \\\
 --network host \\\
