@@ -7,9 +7,9 @@ https://linuxcontainers.org/incus/
 This project aims to maintain a Dockerfile to run incus in a docker/podman container.
 It also installs the incus-ui-canonical to have a Web-based UI.
 
-We now have a debian-based (Dockerfile) and an alpine-based (Dockerfile-alpine) option available.
+I now have made a debian-based and two alpine-based options available.
 
-We also have a smaller alpine-based version called alpine-novm which allows you to use contianers, but not virutal machines, to keep the image smaller.
+The regular alpine version contains what is necessary to run both containers and VMs, but a smaller alpine-based version called alpine-novm which allows you to use contianers, but not virutal machines, to keep the image smaller, is also available.
 Only the alpine-novm version is built for arm64 at present. It should be possible to build the other versions yourself on arm64, but I think VMs do not work anyway.
 
 For debian, we are using the version of incus maintained here:
