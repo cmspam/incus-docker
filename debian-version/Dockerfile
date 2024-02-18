@@ -1,5 +1,5 @@
 # Use the official Debian Bookworm base image
-FROM debian:bookworm
+FROM debian:bookworm-slim
 
 # We make a fake systemctl so that incus doesn't error out without systemd
 RUN echo "#!/bin/bash" > /sbin/systemctl && \
@@ -32,6 +32,12 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo 'fi' >> /start.sh && \
     echo 'if ! ip6tables-legacy -C DOCKER-USER -j ACCEPT &>/dev/null; then' >> /start.sh && \
     echo 'ip6tables-legacy -I DOCKER-USER -j ACCEPT' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
+    echo 'if ! iptables -C DOCKER-USER -j ACCEPT &>/dev/null; then' >> /start.sh && \
+    echo 'iptables -I DOCKER-USER -j ACCEPT' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
+    echo 'if ! ip6tables -C DOCKER-USER -j ACCEPT &>/dev/null; then' >> /start.sh && \
+    echo 'ip6tables -I DOCKER-USER -j ACCEPT' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo '/opt/incus/bin/incusd' >> /start.sh && \
