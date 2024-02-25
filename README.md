@@ -26,6 +26,11 @@ ip6tables-legacy -I DOCKER-USER -j ACCEPT
 
 The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet. If you use podman, it's not needed from my testing.
 
+*Note*: If you want to use LXCFS support, you can set the environment variable USELXCFS=true and mount your volume at /var/lib/lxcfs
+
+*Note*: If you want to use LVM, you can pass mount /dev as /dev in the container.
+
+*Note*: It's untested, but ZFS support should also be working as of 25 February, 2024 update.
 
 # If you want to use the image from docker hub
 
