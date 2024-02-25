@@ -5,6 +5,7 @@ FROM debian:bookworm-slim
 RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo "exit 0" >> /sbin/systemctl && \
     chmod +x /sbin/systemctl && \
+    echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources.list && \
 # Install curl so we can install the keyring.
     apt-get update && \
     apt-get install --no-install-recommends -y curl ca-certificates && \
@@ -13,10 +14,11 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo "deb [signed-by=/etc/apt/keyrings/zabbly.asc] https://pkgs.zabbly.com/incus/stable $(. /etc/os-release && echo ${VERSION_CODENAME}) main" > /etc/apt/sources.list.d/zabbly-incus-stable.list && \
 # Install incus and so on
     apt-get update && \
-    apt-get install --no-install-recommends -y iproute2 btrfs-progs iptables kmod incus incus-ui-canonical && \
+    apt-get install --no-install-recommends -y iproute2 btrfs-progs zfsutils-linux lvm2 udev iptables kmod incus incus-ui-canonical && \
     apt-get remove -y curl && \
     apt autoremove -y && \
     apt-get clean && \
+    mkdir -p /var/lib/lxcfs && \
     echo '#!/bin/bash' > /start.sh && \
     echo 'export PATH="/opt/incus/bin/:${PATH}"' >> /start.sh && \
     echo 'export INCUS_OVMF_PATH="/opt/incus/share/qemu/"' >> /start.sh && \
@@ -40,6 +42,10 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo 'ip6tables -I DOCKER-USER -j ACCEPT' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo 'fi' >> /start.sh && \
+    echo 'if [ "$USELXCFS" = "true" ]; then' >> /start.sh && \    
+    echo '/opt/incus/bin/lxcfs /var/lib/lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
+    echo '/usr/lib/systemd/systemd-udevd &' >> /start.sh && \
     echo '/opt/incus/bin/incusd' >> /start.sh && \
     chmod +x /start.sh
 
