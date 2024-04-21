@@ -30,7 +30,7 @@ The reason is that, without doing this, docker's iptables settings will be block
 
 *Note*: If you want to use LVM, you can pass mount /dev as /dev in the container.
 
-*Note*: It's untested, but ZFS support should also be working as of 25 February, 2024 update.
+*Note*: ZFS support should also be working as of 25 February, 2024 update.
 
 # If you want to use the image from docker hub
 
@@ -102,4 +102,4 @@ I find it easiest to move the binary to /usr/local/bin so that I can just run **
 
 If you configure it to be manageable from the network, we can access the web UI, at https://{YOUR IP}:8443
 
-Although I have tested only on x86-64 as of yet, I believe it should work also with aarch64, though maybe not with vm support. I have tested btrfs support successfully, but have not implemented zfs support. A small modification of the dockerfile should allow it though.
+I have tested on both arm64 and x86_64. Other platforms may work only if using the alpine image.
