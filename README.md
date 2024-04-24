@@ -8,13 +8,10 @@ This project aims to maintain a Dockerfile to run incus in a docker/podman conta
 It also installs the incus-ui-canonical to have a Web-based UI.
 
 *Versions*
-Debian version: I recommend using this with any glibc-based distributions. This is based off of zabbly/incus builds.
-Alpine version: I recommend using this with any musl-based distributions. This is straight from the alpine edge repository, but also includes the incus web UI.
-Alpine no-vm version: This version is the smallest, as it doesn't include qemu, so no VM support. Use if space is an issue.
+Debian version: I recommend using this with any glibc-based distributions. This is based off of zabbly/incus builds ( https://github.com/zabbly/incus )
 
-For debian, we are using the version of incus maintained here:
-https://github.com/zabbly/incus
-
+*(Dockerfile-only) versions*
+Alpine versions are also available, only in Dockerfile form. These will not be prioritized at present.
 
 How to use it:
 
@@ -68,16 +65,6 @@ podman run -d \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
 ghcr.io/cmspam/incus-docker:latest
-```
-
-Alpine version:
-Same as above, but replace with
-```
-ghcr.io/cmspam/incus-docker-alpine:latest
-```
-or
-```
-ghcr.io/cmspam/incus-docker-alpine-novm:latest
 ```
 
 If you use OpenVSwitch, add:
