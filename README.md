@@ -7,14 +7,14 @@ https://linuxcontainers.org/incus/
 This project aims to maintain a Dockerfile to run incus in a docker/podman container.
 It also installs the incus-ui-canonical to have a Web-based UI.
 
-I now have made a debian-based and two alpine-based options available. However due to some issues with the alpine version, my focus going forward will be on the debian version.
-
-The regular alpine version contains what is necessary to run both containers and VMs, but a smaller alpine-based version called alpine-novm which allows you to use contianers, but not virutal machines, to keep the image smaller, is also available. But be prepared for some various issues if you use the alpine version.
+*Versions*
+Debian version: I recommend using this with any glibc-based distributions. This is based off of zabbly/incus builds.
+Alpine version: I recommend using this with any musl-based distributions. This is straight from the alpine edge repository, but also includes the incus web UI.
+Alpine no-vm version: This version is the smallest, as it doesn't include qemu, so no VM support. Use if space is an issue.
 
 For debian, we are using the version of incus maintained here:
 https://github.com/zabbly/incus
 
-For alpine, we use the version in edge/testing -- it could be unstable.
 
 How to use it:
 
@@ -32,21 +32,12 @@ The reason is that, without doing this, docker's iptables settings will be block
 
 *Note*: ZFS support should also be working as of 25 February, 2024 update.
 
-# If you want to use the image from docker hub
+# To use the image
 
-See the instructions here:
-
-https://hub.docker.com/r/cmspam/incus-docker
-
-# If you want to build the Dockerfile yourself
-
-Place the Dockerfile somewhere, and run:
-
-``` docker build -t incus-docker ```
-
-Then, run the docker image. It will not work unless run as privileged. You will want to provide your own /var/lib/incus directory, and to allow it to automatically load the necessary modules when launching a VM (kvm and vsock_vhost) you may also want to give it your /lib/modules directory. Finally, because of incus's networking features, you will probably want to use host networking.  Therefore, you can do something like this on first run:
-
+First, make the directory to hold incus configuration:
 ``` mkdir /var/lib/incus ```
+
+Docker:
 
 ```
 docker run -d \
@@ -56,27 +47,47 @@ docker run -d \
 --restart unless-stopped \
 --device /dev/kvm \
 --device /dev/vsock \
+--device /dev/vhost-vsock \
+--device /dev/vhost-net \
 --network host \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
-incus-docker
+ghcr.io/cmspam/incus-docker:latest
 ```
 
-or for podman
-
+Podman:
 ```
 podman run -d \
 --name incus \
 --privileged \
 --device /dev/kvm \
 --device /dev/vsock \
+--device /dev/vhost-vsock \
+--device /dev/vhost-net \
 --network host \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
-incus-docker
+ghcr.io/cmspam/incus-docker:latest
 ```
 
-NOTE: If you are using the alpine version, in most cases, you can't depend on the ability to load the modules for VMs automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
+Alpine version:
+Same as above, but replace with
+ghcr.io/cmspam/incus-docker-alpine:latest
+or
+ghcr.io/cmspam/incus-docker-alpine-novm:latest
+
+If you use OpenVSwitch, add:
+```
+--volume /run/openvswitch:/run/openvswitch
+```
+
+If you use LVM, it's easiest to add:
+```
+--volume /dev:/dev
+```
+
+```
+NOTE: If you are using the alpine version with a glibc-based image, you can't depend on the ability to load the modules for VMs automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
 
 ```
 echo "vhost_vsock" > /etc/modules-load.d/incus.conf
@@ -102,4 +113,6 @@ I find it easiest to move the binary to /usr/local/bin so that I can just run **
 
 If you configure it to be manageable from the network, we can access the web UI, at https://{YOUR IP}:8443
 
-I have tested on both arm64 and x86_64. Other platforms may work only if using the alpine image.
+I have tested on both arm64 and x86_64.
+
+Other platforms may work if you build the alpine Dockerfile.
