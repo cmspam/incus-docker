@@ -34,6 +34,23 @@ The reason is that, without doing this, docker's iptables settings will be block
 First, make the directory to hold incus configuration:
 ``` mkdir /var/lib/incus ```
 
+
+With Podman (recommended):
+```
+podman run -d \
+--name incus \
+--cgroups=no-conmon \
+--privileged \
+--device /dev/kvm \
+--device /dev/vsock \
+--device /dev/vhost-vsock \
+--device /dev/vhost-net \
+--network host \
+--volume /sys/fs/cgroup:/sys/fs/cgroup \
+--volume /var/lib/incus:/var/lib/incus \
+--volume /lib/modules:/lib/modules:ro \
+ghcr.io/cmspam/incus-docker:latest
+```
 With Docker:
 
 ```
@@ -52,20 +69,6 @@ docker run -d \
 ghcr.io/cmspam/incus-docker:latest
 ```
 
-With Podman:
-```
-podman run -d \
---name incus \
---privileged \
---device /dev/kvm \
---device /dev/vsock \
---device /dev/vhost-vsock \
---device /dev/vhost-net \
---network host \
---volume /var/lib/incus:/var/lib/incus \
---volume /lib/modules:/lib/modules:ro \
-ghcr.io/cmspam/incus-docker:latest
-```
 
 If you use OpenVSwitch, add:
 ```
