@@ -72,9 +72,13 @@ ghcr.io/cmspam/incus-docker:latest
 
 Alpine version:
 Same as above, but replace with
+```
 ghcr.io/cmspam/incus-docker-alpine:latest
+```
 or
+```
 ghcr.io/cmspam/incus-docker-alpine-novm:latest
+```
 
 If you use OpenVSwitch, add:
 ```
@@ -86,7 +90,6 @@ If you use LVM, it's easiest to add:
 --volume /dev:/dev
 ```
 
-```
 NOTE: If you are using the alpine version with a glibc-based image, you can't depend on the ability to load the modules for VMs automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
 
 ```
