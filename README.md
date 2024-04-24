@@ -34,7 +34,7 @@ The reason is that, without doing this, docker's iptables settings will be block
 First, make the directory to hold incus configuration:
 ``` mkdir /var/lib/incus ```
 
-Docker:
+With Docker:
 
 ```
 docker run -d \
@@ -52,7 +52,7 @@ docker run -d \
 ghcr.io/cmspam/incus-docker:latest
 ```
 
-Podman:
+With Podman:
 ```
 podman run -d \
 --name incus \
