@@ -17,17 +17,13 @@ How to use it:
 
 *Note*: If you use the environment variable SETIPTABLES=true, it will be adding:
 ```
-iptables-legacy -I DOCKER-USER -j ACCEPT
-ip6tables-legacy -I DOCKER-USER -j ACCEPT
+iptables (or iptables-legacy) -I DOCKER-USER -j ACCEPT
+ip6tables (or ip6tables-legacy) -I DOCKER-USER -j ACCEPT
 ```
 
-The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet. If you use podman, it's not needed from my testing.
+The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet. If you use podman, it's not needed.
 
 *Note*: If you want to use LXCFS support, you can set the environment variable USELXCFS=true and mount your volume at /var/lib/lxcfs
-
-*Note*: If you want to use LVM, you can pass mount /dev as /dev in the container.
-
-*Note*: ZFS support should also be working as of 25 February, 2024 update.
 
 # To use the image
 
@@ -40,13 +36,12 @@ With Podman (recommended):
 podman run -d \
 --name incus \
 --cgroups=no-conmon \
+--cgroupns=host \
+--security-opt unmask=/sys/fs/cgroup \
 --privileged \
---device /dev/kvm \
---device /dev/vsock \
---device /dev/vhost-vsock \
---device /dev/vhost-net \
 --network host \
---volume /sys/fs/cgroup:/sys/fs/cgroup \
+--volume /sys/fs/cgroup:/sys/fs/cgroup:rw \
+--volume /dev:/dev \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
 ghcr.io/cmspam/incus-docker:latest
@@ -59,26 +54,35 @@ docker run -d \
 --privileged \
 --env SETIPTABLES=true \
 --restart unless-stopped \
---device /dev/kvm \
---device /dev/vsock \
---device /dev/vhost-vsock \
---device /dev/vhost-net \
 --network host \
+--volume /dev:/dev \
+--volume /sys/fs/cgroup:/sys/fs/cgroup:rw \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
 ghcr.io/cmspam/incus-docker:latest
 ```
 
+# Fixing cgroups issue
 
-If you use OpenVSwitch, add:
+If you run 'podman logs incus' you may see an error such as 
 ```
---volume /run/openvswitch:/run/openvswitch
+level=error msg="balance: Unable to set cpuset" err="setting cgroup item for the container failed"
+name=(container) value="0,1,2,3"
 ```
 
-If you use LVM, it's easiest to add:
-```
---volume /dev:/dev
-```
+We can fix this by adding the following kernel boot parameter, then reboot:
+ ```systemd.unified_cgroup_hierarchy=0```  
+
+*IMPORTANT:* --volume /sys/fs/cgroup:/sys/fs/cgroup:rw is necessary for this to work. Make sure it's passed through.
+
+If someone comes up with a way to continue to use unified hierarchy with working cpuset functionality, please let me know.
+
+# OpenVSwitch
+
+If you use OpenVSwitch, add this line to your docker/podman command:
+```--volume /run/openvswitch:/run/openvswitch```
+
+# Alpine-based Image
 
 NOTE: If you are using the alpine version with a glibc-based image, you can't depend on the ability to load the modules for VMs automatically. You should set up your environment to automatically load vhost_vsock and kvm modules. You can do it like this:
 
@@ -87,6 +91,7 @@ echo "vhost_vsock" > /etc/modules-load.d/incus.conf
 echo "kvm" >> /etc/modules-load.d/incus.conf
 ```
 
+# Management
 
 After you start the container, incus will be running. If you used the folder I suggested and used host networking, you can manage it immediately with the incus binary from the same machine. Grab the binary from the latest releases here:
 
@@ -106,6 +111,6 @@ I find it easiest to move the binary to /usr/local/bin so that I can just run **
 
 If you configure it to be manageable from the network, we can access the web UI, at https://{YOUR IP}:8443
 
-I have tested on both arm64 and x86_64.
+I have successfully tested on both arm64 and x86_64, on ClearLinux (x86_64) and OpenSuse MicroOS (x86_64, arm64). If your distribution has a native Incus package, it's best to use it.
 
-Other platforms may work if you build the alpine Dockerfile.
+The focus is on x86_64 and arm64, but other platforms may work if you build the Alpine-based Dockerfile.
