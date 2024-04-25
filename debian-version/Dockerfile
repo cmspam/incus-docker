@@ -14,7 +14,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo "deb [signed-by=/etc/apt/keyrings/zabbly.asc] https://pkgs.zabbly.com/incus/stable $(. /etc/os-release && echo ${VERSION_CODENAME}) main" > /etc/apt/sources.list.d/zabbly-incus-stable.list && \
 # Install incus and so on
     apt-get update && \
-    apt-get install --no-install-recommends -y iproute2 openvswitch-switch btrfs-progs zfsutils-linux lvm2 udev iptables kmod incus incus-ui-canonical && \
+    apt-get install --no-install-recommends -y iproute2 thin-provisioning-tools openvswitch-switch btrfs-progs zfsutils-linux lvm2 udev iptables kmod incus incus-ui-canonical && \
     apt-get remove -y curl && \
     apt autoremove -y && \
     apt-get clean && \
