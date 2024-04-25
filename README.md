@@ -56,7 +56,6 @@ docker run -d \
 --restart unless-stopped \
 --network host \
 --volume /dev:/dev \
---volume /sys/fs/cgroup:/sys/fs/cgroup:rw \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
 ghcr.io/cmspam/incus-docker:latest
