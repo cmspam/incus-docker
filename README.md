@@ -76,6 +76,21 @@ We can fix this by adding the following kernel boot parameter, then reboot:
 
 If someone comes up with a way to continue to use unified hierarchy with working cpuset functionality, please let me know.
 
+# AppArmor
+
+If you have AppArmor enabled on your setup, you may need to add permissions to dnsmasq so that it can work with Incus without permission errors.  Here is an example of how to do so with OpenSuse Tumbleweed, but it should be similar for other distributions.
+
+Please edit the file:
+```/etc/apparmor.d/usr.sbin.dnsmasq```
+
+You will find a line like below, for Tumbleweed it was line 56 or so:
+ ```/var/log/dnsmasq*.log w,```
+
+Under that line, please add
+ ```/var/lib/incus/** rw,```
+
+
+
 # OpenVSwitch
 
 If you use OpenVSwitch, add this line to your docker/podman command:
