@@ -90,6 +90,9 @@ Under that line, please add
  ```/var/lib/incus/** rw,```
 
 
+If you want to use AppArmor functionality in incus, you can pass it through to the container by adding:
+
+```--volume /sys/kernel/security:/sys/kernel/security```
 
 # OpenVSwitch
 
