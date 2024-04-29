@@ -23,6 +23,14 @@ RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources
     systemctl mask getty@tty4.service && \
     systemctl mask getty@tty5.service && \
     systemctl mask getty@tty6.service && \
+# Disable udevd
+    systemctl mask systemd-udevd.service && \
+# Disable zfs load module
+    systemctl mask zfs-load-module.service && \
+    systemctl mask ovsdb-server.service && \
+    systemctl mask ovs-vswitchd.service && \
+    systemctl mask openvswitch-switch && \
+    systemctl mask ovs-record-hostname && \
 # Make our startup script
     touch /sbin/entrypoint.sh && \
     chmod +x /sbin/entrypoint.sh && \
