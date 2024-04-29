@@ -30,7 +30,7 @@ RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources
 # Prevent output to /dev/console, instead use log output.
     echo "mount --bind /dev/pts/0 /dev/console" >> /sbin/entrypoint.sh && \
 # Our entrypoint is systemd boot.
-    echo "/sbin/init --boot" >> /sbin/entrypoint.sh
+    echo "exec /sbin/init --boot" >> /sbin/entrypoint.sh
 
 
 CMD ["/sbin/entrypoint.sh"]
