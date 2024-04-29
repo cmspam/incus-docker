@@ -1,5 +1,5 @@
 # Use the official Debian Bookworm base image
-FROM debian:bookworm
+FROM docker.io/debian:bookworm
 
 RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources.list && \
 # Install curl so we can install the keyring.
