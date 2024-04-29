@@ -15,7 +15,22 @@ RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources
     systemctl enable incus && \
 # Clean up
     apt autoremove -y && \
-    apt-get clean
-
+    apt-get clean && \
+# Disable TTY
+    systemctl mask getty@tty1.service && \
+    systemctl mask getty@tty2.service && \
+    systemctl mask getty@tty3.service && \
+    systemctl mask getty@tty4.service && \
+    systemctl mask getty@tty5.service && \
+    systemctl mask getty@tty6.service && \
+# Make our startup script
+    touch /sbin/entrypoint.sh && \
+    chmod +x /sbin/entrypoint.sh && \
+    echo "#!/bin/bash" >> /sbin/entrypoint.sh && \
+# Prevent output to /dev/console, instead use log output.
+    echo "mount --bind /dev/pts/0 /dev/console" >> /sbin/entrypoint.sh && \
 # Our entrypoint is systemd boot.
-CMD ["/sbin/init", "--boot"]
+    echo "/sbin/init --boot" >> /sbin/entrypoint.sh
+
+
+CMD ["/sbin/entrypoint.sh"]
