@@ -15,7 +15,7 @@ RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources
     systemctl enable incus && \
 # Clean up
     apt autoremove -y && \
-    apt-get clean && \
+    apt-get clean
 
 # Our entrypoint is systemd boot.
 CMD ["/sbin/init", "--boot"]
