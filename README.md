@@ -15,15 +15,13 @@ Alpine versions are also available, only in Dockerfile form. These will not be p
 
 How to use it:
 
-*Note*: If you use the environment variable SETIPTABLES=true, it will be adding:
+*Note*: If you use docker and want to use a bridge created by incus, you'll need to fix iptables:
 ```
 iptables (or iptables-legacy) -I DOCKER-USER -j ACCEPT
 ip6tables (or ip6tables-legacy) -I DOCKER-USER -j ACCEPT
 ```
 
 The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet. If you use podman, it's not needed.
-
-*Note*: If you want to use LXCFS support, you can set the environment variable USELXCFS=true and mount your volume at /var/lib/lxcfs
 
 # To use the image
 
@@ -52,29 +50,14 @@ With Docker:
 docker run -d \
 --name incus \
 --privileged \
---env SETIPTABLES=true \
 --restart unless-stopped \
 --network host \
+--volume /sys/fs/cgroup:/sys/fs/cgroup:rw \
 --volume /dev:/dev \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
 ghcr.io/cmspam/incus-docker:latest
 ```
-
-# Fixing cgroups issue
-
-If you run 'podman logs incus' you may see an error such as 
-```
-level=error msg="balance: Unable to set cpuset" err="setting cgroup item for the container failed"
-name=(container) value="0,1,2,3"
-```
-
-We can fix this by adding the following kernel boot parameter, then reboot:
- ```systemd.unified_cgroup_hierarchy=0```  
-
-*IMPORTANT:* --volume /sys/fs/cgroup:/sys/fs/cgroup:rw is necessary for this to work. Make sure it's passed through.
-
-If someone comes up with a way to continue to use unified hierarchy with working cpuset functionality, please let me know.
 
 # AppArmor
 
