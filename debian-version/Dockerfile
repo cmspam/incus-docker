@@ -29,12 +29,17 @@ RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources
     systemctl mask ovs-vswitchd.service && \
     systemctl mask openvswitch-switch && \
     systemctl mask ovs-record-hostname && \
+# Make /openvswitch directory
+    mkdir /openvswitch && \
 # Make our startup script
     touch /sbin/entrypoint.sh && \
     chmod +x /sbin/entrypoint.sh && \
     echo "#!/bin/bash" >> /sbin/entrypoint.sh && \
 # Prevent output to /dev/console, instead use log output.
     echo "mount --bind /dev/null /dev/console" >> /sbin/entrypoint.sh && \
+# Mount openvswitch in /run
+    echo "mkdir -p /run/openvswitch" >> /sbin/entrypoint.sh && \
+    echo "mount --bind /openvswitch /run/openvswitch" >> /sbin/entrypoint.sh && \
 # Our entrypoint is systemd boot.
     echo "exec /sbin/init --boot" >> /sbin/entrypoint.sh
 
