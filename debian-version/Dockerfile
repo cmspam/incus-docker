@@ -53,9 +53,6 @@ RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources
     echo "#!/bin/bash" >> /sbin/entrypoint.sh && \
 # Prevent output to /dev/console, instead use log output.
     echo "mount --bind /dev/null /dev/console" >> /sbin/entrypoint.sh && \
-# Mount openvswitch in /run
-    echo "mkdir -p /run/openvswitch" >> /sbin/entrypoint.sh && \
-    echo "mount --bind /openvswitch /run/openvswitch" >> /sbin/entrypoint.sh && \
 # Our entrypoint is systemd boot.
     echo "exec /sbin/init --boot" >> /sbin/entrypoint.sh
 
