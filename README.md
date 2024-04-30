@@ -79,8 +79,10 @@ If you want to use AppArmor functionality in incus, you can pass it through to t
 
 # OpenVSwitch
 
-If you use OpenVSwitch, add this line to your docker/podman command:
-```--volume /run/openvswitch:/run/openvswitch```
+If you plan to use OpenVSwitch, add this line to your docker/podman command:
+```--volume /run/openvswitch:/openvswitch```
+The startup script will bind mount /openvswitch to /run/openvswitch in the container, bypassing issues of it being deleted otherwise.
+
 
 # Alpine-based Image
 
