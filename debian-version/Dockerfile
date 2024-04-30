@@ -31,6 +31,22 @@ RUN echo "deb http://deb.debian.org/debian bookworm contrib" >> /etc/apt/sources
     systemctl mask ovs-record-hostname && \
 # Make /openvswitch directory
     mkdir /openvswitch && \
+# Make systemd service to mount /run/openvswitch
+    echo "[Unit]" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "Description=Mount OpenVSwitch" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "Before=network-online.target" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "Wants=network-online.target" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "[Service]" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "Type=oneshot" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "RemainAfterExit=yes" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "ExecStartPre=/bin/mkdir -p /run/openvswitch" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "ExecStart=/bin/mount --bind /openvswitch /run/openvswitch" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "ExecStop=/bin/umount /run/openvswitch" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "[Install]" >> /etc/systemd/system/mount-openvswitch.service && \\
+    echo "WantedBy=multi-user.target" >> /etc/systemd/system/mount-openvswitch.service
+    systemctl enable mount-openvswitch.service
 # Make our startup script
     touch /sbin/entrypoint.sh && \
     chmod +x /sbin/entrypoint.sh && \
