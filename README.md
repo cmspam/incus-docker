@@ -69,7 +69,8 @@ If you run 'podman logs incus' you may see an error such as
 level=error msg="balance: Unable to set cpuset" err="setting cgroup item for the container failed"
 name=(container) value="0,1,2,3"
 ```
-This can be fixed by making sure you run with --pid=host
+This can be fixed by making sure you run with the option:
+```--pid=host```
 
 # AppArmor
 
