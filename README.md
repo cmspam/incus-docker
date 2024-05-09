@@ -69,6 +69,8 @@ level=error msg="balance: Unable to set cpuset" err="setting cgroup item for the
 name=(container) value="0,1,2,3"
 ```
 
+(Update: This may no longer be an issue with latest updates. But just in case see below)
+
 We can fix this by adding the following kernel boot parameter, then reboot:
  ```systemd.unified_cgroup_hierarchy=0```
 
