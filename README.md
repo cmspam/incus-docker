@@ -40,7 +40,7 @@ podman run -d \
 --security-opt unmask=/sys/fs/cgroup \
 --privileged \
 --network host \
---volume /sys/fs/cgroup:/sys/fs/cgroup:rw \
+--pid=host \
 --volume /dev:/dev \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
@@ -55,6 +55,7 @@ docker run -d \
 --env SETIPTABLES=true \
 --restart unless-stopped \
 --network host \
+--pid=host \
 --volume /dev:/dev \
 --volume /var/lib/incus:/var/lib/incus \
 --volume /lib/modules:/lib/modules:ro \
@@ -68,15 +69,7 @@ If you run 'podman logs incus' you may see an error such as
 level=error msg="balance: Unable to set cpuset" err="setting cgroup item for the container failed"
 name=(container) value="0,1,2,3"
 ```
-
-(Update: This may no longer be an issue with latest updates. But just in case see below)
-
-We can fix this by adding the following kernel boot parameter, then reboot:
- ```systemd.unified_cgroup_hierarchy=0```
-
-*IMPORTANT:* --volume /sys/fs/cgroup:/sys/fs/cgroup:rw is necessary for this to work. Make sure it's passed through.
-
-If someone comes up with a way to continue to use unified hierarchy with working cpuset functionality, please let me know.
+This can be fixed by making sure you run with --pid=host
 
 # AppArmor
 
