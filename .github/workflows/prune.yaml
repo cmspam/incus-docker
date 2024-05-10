@@ -1,0 +1,23 @@
+name: Prune Old Container Images
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight UTC
+
+jobs:
+  prune-container-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prune old container images
+        uses: vlaurin/action-ghcr-prune@v0.6.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          organization: cmspam
+          container: incus-docker
+          dry-run: false
+          keep-younger-than: 1 # days
+          keep-last: 1
+          prune-untagged: true
