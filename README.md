@@ -13,6 +13,12 @@ Debian version: I recommend using this with any glibc-based distributions. This 
 *(Dockerfile-only) versions*
 Alpine versions are also available, only in Dockerfile form. These will not be prioritized at present.
 
+*Branches*
+You can pull from
+incus-docker:latest -- The default choice. The latest stable version of Incus
+incus-docker:daily -- The daily builds from zabbly/incus
+incus-docker:lts -- The 6.0 LTS version of incus.
+
 How to use it:
 
 *Note*: If you use the environment variable SETIPTABLES=true, it will be adding:
