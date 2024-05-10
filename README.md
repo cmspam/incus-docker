@@ -18,9 +18,9 @@ It also installs the incus-ui-canonical to have a Web-based UI.
 *Branches*
 
 You can pull from:
-* incus-docker:latest -- The default choice. The latest stable version of Incus
-* incus-docker:daily -- The daily builds from zabbly/incus
-* incus-docker:lts -- The 6.0 LTS version of incus.
+* incus-docker:latest -- The default choice. The latest stable version of Incus (Debian based)
+* incus-docker:daily -- The daily builds from zabbly/incus (Debian based)
+* incus-docker:lts -- The 6.0 LTS version of incus. (Debian based)
 
 How to use it:
 
