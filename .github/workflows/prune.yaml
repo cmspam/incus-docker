@@ -3,25 +3,19 @@ on:
   schedule:
     - cron: '36 10 * * *'
   push:
-    branches: [ "latest" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "latest" ]
+    branches:
+      - latest
 jobs:
   prune-container-registry:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Prune old container images
+      - name: Prune
         uses: vlaurin/action-ghcr-prune@v0.6.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          organization: cmspam
+          user: cmspam
           container: incus-docker
-          dry-run: false
-          keep-younger-than: 1 # days
-          keep-last: 1
+          dry-run: false # Dry-run first, then change to `false`
+          keep-younger-than: 7 # days
+          keep-last: 2
           prune-untagged: true
