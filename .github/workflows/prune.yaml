@@ -17,6 +17,6 @@ jobs:
           user: cmspam
           container: incus-docker
           dry-run: false # Dry-run first, then change to `false`
-          keep-younger-than: 7 # days
-          keep-last: 2
+          keep-younger-than: 0 # days
+          keep-last: 0
           prune-untagged: true
