@@ -1,6 +1,0 @@
-name: Delete all owner containers without tags
-uses: Chizkiyahu/delete-untagged-ghcr-action@v3
-with:
-    token: ${{ secrets.PAT_TOKEN }}
-    repository_owner: ${{ github.repository_owner }}
-    owner_type: org # or user
