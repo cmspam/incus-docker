@@ -8,16 +8,17 @@ This project aims to maintain a Dockerfile to run incus in a docker/podman conta
 It also installs the incus-ui-canonical to have a Web-based UI.
 
 *Versions*
-Debian version: I recommend using this with any glibc-based distributions. This is based off of zabbly/incus stable builds ( https://github.com/zabbly/incus )
 
-*(Dockerfile-only) versions*
-Alpine versions are also available, only in Dockerfile form. These will not be prioritized at present.
+* Debian version: I recommend using this with any glibc-based distributions. This is based off of zabbly/incus stable builds ( https://github.com/zabbly/incus )
+
+* Alpine version: Available, only in Dockerfile form. These will not be prioritized at present.
 
 *Branches*
-You can pull from
-incus-docker:latest -- The default choice. The latest stable version of Incus
-incus-docker:daily -- The daily builds from zabbly/incus
-incus-docker:lts -- The 6.0 LTS version of incus.
+
+You can pull from:
+* incus-docker:latest -- The default choice. The latest stable version of Incus
+* incus-docker:daily -- The daily builds from zabbly/incus
+* incus-docker:lts -- The 6.0 LTS version of incus.
 
 How to use it:
 
