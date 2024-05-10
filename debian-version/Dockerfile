@@ -11,7 +11,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     apt-get install --no-install-recommends -y curl ca-certificates && \
     mkdir -p /etc/apt/keyrings/ && \
     curl -fsSL https://pkgs.zabbly.com/key.asc -o /etc/apt/keyrings/zabbly.asc && \
-    echo "deb [signed-by=/etc/apt/keyrings/zabbly.asc] https://pkgs.zabbly.com/incus/stable $(. /etc/os-release && echo ${VERSION_CODENAME}) main" > /etc/apt/sources.list.d/zabbly-incus-stable.list && \
+    echo "deb [signed-by=/etc/apt/keyrings/zabbly.asc] https://pkgs.zabbly.com/incus/daily $(. /etc/os-release && echo ${VERSION_CODENAME}) main" > /etc/apt/sources.list.d/zabbly-incus-daily.list && \
 # Install incus and so on
     apt-get update && \
     apt-get install --no-install-recommends -y iproute2 thin-provisioning-tools openvswitch-switch btrfs-progs zfsutils-linux lvm2 udev iptables kmod incus incus-ui-canonical && \
