@@ -82,15 +82,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
       #    cache-from: type=gha
       #    cache-to: type=gha,mode=max
-      - name: Delete untagged and unneeded containers
-        uses: pcasteran/ghcr-cleaning-action@v1
-        with:
-          user: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          package: incus-docker
-          repository: cmspam/incus-docker
-          dry-run: false
-
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
