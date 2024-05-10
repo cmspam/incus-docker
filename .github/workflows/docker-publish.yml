@@ -82,15 +82,14 @@ jobs:
           platforms: linux/amd64,linux/arm64
       #    cache-from: type=gha
       #    cache-to: type=gha,mode=max
-
-      - name: Delete all containers from repository without tags
-        uses: Chizkiyahu/delete-untagged-ghcr-action@v3
+      - name: Delete untagged and unneeded containers
+        uses: pcasteran/ghcr-cleaning-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository_owner: ${{ github.repository_owner }}
-          repository: ${{ github.repository }}
-          untagged_only: true
-          owner_type: org # or user
+          user: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          package: incus-docker
+          repository: cmspam/incus-docker
+          dry-run: false
 
 
       # Sign the resulting Docker image digest except on PRs.
