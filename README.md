@@ -11,7 +11,9 @@ It also installs the incus-ui-canonical to have a Web-based UI.
 
 * Debian version: I recommend using this with any glibc-based distributions. This is based off of zabbly/incus stable builds ( https://github.com/zabbly/incus )
 
-* Alpine version: Available, only in Dockerfile form. These will not be prioritized at present.
+* Alpine version: Available, only in Dockerfile form. These will not be prioritized.
+
+* Alpine no-vm version: Available, only in Dockerfile form. This is a smaller iamge which doesn't have qemu/VM functionality.
 
 *Branches*
 
