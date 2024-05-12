@@ -14,17 +14,22 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo "deb [signed-by=/etc/apt/keyrings/zabbly.asc] https://pkgs.zabbly.com/incus/stable $(. /etc/os-release && echo ${VERSION_CODENAME}) main" > /etc/apt/sources.list.d/zabbly-incus-stable.list && \
 # Install incus and so on
     apt-get update && \
-    apt-get install --no-install-recommends -y iproute2 thin-provisioning-tools openvswitch-switch btrfs-progs zfsutils-linux lvm2 udev iptables kmod incus incus-ui-canonical && \
+    apt-get install --no-install-recommends -y fuse iproute2 thin-provisioning-tools openvswitch-switch btrfs-progs lvm2 udev iptables kmod  && \
+    apt-get install --no-install-recommends --no-install-suggests -y zfsutils-linux && \
+    apt-get install -y incus incus-ui-canonical
     apt-get remove -y curl && \
     apt autoremove -y && \
     apt-get clean && \
-    mkdir -p /var/lib/lxcfs && \
+    mkdir -p /var/lib/incus/lxcfs && \
     echo '#!/bin/bash' > /start.sh && \
     echo 'trap "cleanup; exit" SIGTERM' >> /start.sh && \
     echo 'cleanup() {' >> /start.sh && \
     echo '  echo "Stopping incusd..."' >> /start.sh && \
     echo '  pkill -TERM incusd' >> /start.sh && \
     echo '  echo "Stopped incusd."' >> /start.sh && \
+    echo '  echo "Stopping lxcfs..."' >> /start.sh && \
+    echo '  pkill -TERM lxcfs' >> /start.sh && \
+    echo '  fusermount -u /var/lib/incus/lxcfs' >> /start.sh && \
     echo '}' >> /start.sh && \
     echo 'export PATH="/opt/incus/bin/:${PATH}"' >> /start.sh && \
     echo 'export INCUS_OVMF_PATH="/opt/incus/share/qemu/"' >> /start.sh && \
@@ -48,9 +53,9 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '    ip6tables -I DOCKER-USER -j ACCEPT' >> /start.sh && \
     echo '  fi' >> /start.sh && \
     echo 'fi' >> /start.sh && \
-    echo 'if [ "$USELXCFS" = "true" ]; then' >> /start.sh && \
-    echo '  /opt/incus/bin/lxcfs /var/lib/lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
-    echo 'fi' >> /start.sh && \
+#    echo 'if [ "$USELXCFS" = "true" ]; then' >> /start.sh && \
+    echo '  /opt/incus/bin/lxcfs /var/lib/incus/lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
+#    echo 'fi' >> /start.sh && \
 #    echo '/usr/lib/systemd/systemd-udevd &' >> /start.sh && \
     echo '/opt/incus/bin/incusd' >> /start.sh && \
     chmod +x /start.sh
