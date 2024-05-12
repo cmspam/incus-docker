@@ -20,6 +20,8 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     apt-get remove -y curl && \
     apt autoremove -y && \
     apt-get clean && \
+    update-alternatives --set iptables /usr/sbin/iptables-legacy && \
+    update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy && \
     echo '#!/bin/bash' > /start.sh && \
     echo 'trap "cleanup; exit" SIGTERM' >> /start.sh && \
     echo 'cleanup() {' >> /start.sh && \
