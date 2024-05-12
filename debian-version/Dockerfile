@@ -59,7 +59,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '  fi' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo '  mkdir -p /var/lib/incus-lxcfs' >> /start.sh && \
-    echo '  /opt/incus/bin/lxcfs /var/lib/incus-lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
+    echo '  /opt/incus/bin/lxcfs /var/lib/incus-lxcfs --enable-loadavg --enable-cfs' >> /start.sh && \
 #    echo '/usr/lib/systemd/systemd-udevd &' >> /start.sh && \
     echo '/opt/incus/bin/incusd' >> /start.sh && \
     chmod +x /start.sh
