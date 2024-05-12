@@ -32,8 +32,6 @@ ip6tables (or ip6tables-legacy) -I DOCKER-USER -j ACCEPT
 
 The reason is that, without doing this, docker's iptables settings will be blocking the connections from the incus bridge you create, and your containers/vms will not be able to access the internet. If you use podman, it's not needed.
 
-*Note*: If you want to use LXCFS support, you can set the environment variable USELXCFS=true and mount your volume at /var/lib/lxcfs
-
 # To use the image
 
 First, make the directory to hold incus configuration:
