@@ -25,11 +25,13 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo 'trap "cleanup; exit" SIGTERM' >> /start.sh && \
     echo 'cleanup() {' >> /start.sh && \
     echo '  echo "Stopping incusd..."' >> /start.sh && \
+    echo '  incus admin shutdown' >> /start.sh && \
     echo '  pkill -TERM incusd' >> /start.sh && \
     echo '  echo "Stopped incusd."' >> /start.sh && \
     echo '  echo "Stopping lxcfs..."' >> /start.sh && \
     echo '  pkill -TERM lxcfs' >> /start.sh && \
     echo '  fusermount -u /var/lib/incus/lxcfs' >> /start.sh && \
+    echo '  echo "Stopped lxcfs."' >> /start.sh && \
     echo '}' >> /start.sh && \
     echo 'export PATH="/opt/incus/bin/:${PATH}"' >> /start.sh && \
     echo 'export INCUS_OVMF_PATH="/opt/incus/share/qemu/"' >> /start.sh && \
