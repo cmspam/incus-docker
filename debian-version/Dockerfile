@@ -16,7 +16,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     apt-get update && \
     apt-get install --no-install-recommends -y fuse iproute2 thin-provisioning-tools openvswitch-switch btrfs-progs lvm2 udev iptables kmod  && \
     apt-get install --no-install-recommends --no-install-suggests -y zfsutils-linux && \
-    apt-get install -y incus incus-ui-canonical && \
+    apt-get install --no-install-recommends -y incus incus-ui-canonical && \
     apt-get remove -y curl && \
     apt autoremove -y && \
     apt-get clean && \
