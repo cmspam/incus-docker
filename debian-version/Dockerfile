@@ -54,6 +54,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '  fi' >> /start.sh && \
     echo 'fi' >> /start.sh && \
 #    echo 'if [ "$USELXCFS" = "true" ]; then' >> /start.sh && \
+    echo '  mkdir -p /var/lib/incus/lxcfs' >> /start.sh && \
     echo '  /opt/incus/bin/lxcfs /var/lib/incus/lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
 #    echo 'fi' >> /start.sh && \
 #    echo '/usr/lib/systemd/systemd-udevd &' >> /start.sh && \
