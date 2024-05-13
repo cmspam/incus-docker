@@ -35,6 +35,12 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '  pkill -TERM lxcfs' >> /start.sh && \
     echo '  fusermount -u /var/lib/incus-lxcfs' >> /start.sh && \
     echo '  echo "Stopped lxcfs."' >> /start.sh && \
+    echo ' echo "Stopping systemd-udevd..."' >> /start.sh && \
+    echo ' if kill $UDEVD_PID &>/dev/null; then' >> /start.sh && \
+    echo '   echo "Stopped systemd-udevd with PID $UDEVD_PID."' >> /start.sh && \
+    echo ' else' >> /start.sh && \
+    echo '   echo "Failed to stop systemd-udevd with PID $UDEVD_PID."' >> /start.sh && \
+    echo ' fi' >> /start.sh && \
     echo '}' >> /start.sh && \
     echo 'export PATH="/opt/incus/bin/:${PATH}"' >> /start.sh && \
     echo 'export INCUS_OVMF_PATH="/opt/incus/share/qemu/"' >> /start.sh && \
@@ -61,6 +67,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '  mkdir -p /var/lib/incus-lxcfs' >> /start.sh && \
     echo '  /opt/incus/bin/lxcfs /var/lib/incus-lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
     echo '/usr/lib/systemd/systemd-udevd &' >> /start.sh && \
+    echo 'UDEVD_PID=$!' >> /start.sh && \
     echo '/opt/incus/bin/incusd' >> /start.sh && \
     chmod +x /start.sh
 
