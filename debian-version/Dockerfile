@@ -35,11 +35,12 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '  pkill -TERM lxcfs' >> /start.sh && \
     echo '  fusermount -u /var/lib/incus-lxcfs' >> /start.sh && \
     echo '  echo "Stopped lxcfs."' >> /start.sh && \
-    echo ' echo "Stopping systemd-udevd..."' >> /start.sh && \
-    echo ' if kill $UDEVD_PID &>/dev/null; then' >> /start.sh && \
-    echo '   echo "Stopped systemd-udevd with PID $UDEVD_PID."' >> /start.sh && \
+    echo ' CHILD_PIDS=$(pgrep -P $$)' >> /start.sh && \
+    echo ' if [ -n "$CHILD_PIDS" ]; then' >> /start.sh && \
+    echo '   pkill -TERM -P $$' >> /start.sh && \
+    echo '   echo "Stopped child processes with PIDs: $CHILD_PIDS"' >> /start.sh && \
     echo ' else' >> /start.sh && \
-    echo '   echo "Failed to stop systemd-udevd with PID $UDEVD_PID."' >> /start.sh && \
+    echo '   echo "No child processes found."' >> /start.sh && \
     echo ' fi' >> /start.sh && \
     echo '}' >> /start.sh && \
     echo 'export PATH="/opt/incus/bin/:${PATH}"' >> /start.sh && \
