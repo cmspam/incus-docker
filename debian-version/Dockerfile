@@ -69,7 +69,8 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '  /opt/incus/bin/lxcfs /var/lib/incus-lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
     echo '/usr/lib/systemd/systemd-udevd &' >> /start.sh && \
     echo 'UDEVD_PID=$!' >> /start.sh && \
-    echo '/opt/incus/bin/incusd' >> /start.sh && \
+    echo '/opt/incus/bin/incusd &' >> /start.sh && \
+    echo 'sleep infinity' >> /start.sh && \    
     chmod +x /start.sh
 
 # Set environment variables
