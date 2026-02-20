@@ -80,6 +80,19 @@ name=(container) value="0,1,2,3"
 This can be fixed by making sure you run with the option:
 ```--pid=host```
 
+# Host Device Permissions (KVM GID)
+
+If you are running this container on a host where you also run other virtualization tools (like libvirt or qemu on RHEL, CoreOS, or Fedora), the container's internal udevd might change the ownership of /dev/kvm and break your host's virtual machines.
+
+To prevent this, find your host's KVM group ID:
+```
+getent group kvm | cut -d: -f3
+```
+
+Pass this value (e.g., 36 for RHEL/CoreOS) as an environment variable KVM_GID. This forces the container to use your host's ID, ensuring both the host and Incus can access the device simultaneously.
+
+Example: add `-e KVM_GID=36` to your command if kvm is group 36.
+
 # AppArmor
 
 If you have AppArmor enabled on your setup, you may need to add permissions to dnsmasq so that it can work with Incus without permission errors.  Here is an example of how to do so with OpenSuse Tumbleweed, but it should be similar for other distributions.
