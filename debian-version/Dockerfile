@@ -12,18 +12,16 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     mkdir -p /etc/apt/keyrings/ && \
     curl -fsSL https://pkgs.zabbly.com/key.asc -o /etc/apt/keyrings/zabbly.asc && \
     echo "deb [signed-by=/etc/apt/keyrings/zabbly.asc] https://pkgs.zabbly.com/incus/stable $(. /etc/os-release && echo ${VERSION_CODENAME}) main" > /etc/apt/sources.list.d/zabbly-incus-stable.list && \
-# Install incus and so on
+# Install incus and dependencies
+# Added 'passwd' to ensure groupmod is available for GID mapping
     apt-get update && \
-    apt-get install --no-install-recommends -y fuse nftables ebtables arptables iproute2 thin-provisioning-tools openvswitch-switch btrfs-progs lvm2 udev iptables kmod  && \
+    apt-get install --no-install-recommends -y fuse nftables ebtables arptables iproute2 thin-provisioning-tools openvswitch-switch btrfs-progs lvm2 udev iptables kmod passwd && \
     apt-get install --no-install-recommends --no-install-suggests -y zfsutils-linux && \
     apt-get install --no-install-recommends -y incus incus-ui-canonical && \
     apt-get remove -y curl && \
     apt autoremove -y && \
     apt-get clean && \
-#    update-alternatives --set iptables /usr/sbin/iptables-legacy && \
-#    update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy && \
-#    update-alternatives --set arptables /usr/sbin/arptables-legacy && \
-#    update-alternatives --set ebtables /usr/sbin/ebtables-legacy && \
+# Generate the start.sh script
     echo '#!/bin/bash' > /start.sh && \
     echo 'trap "cleanup; exit" SIGTERM' >> /start.sh && \
     echo 'cleanup() {' >> /start.sh && \
@@ -35,14 +33,20 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '  pkill -TERM lxcfs' >> /start.sh && \
     echo '  fusermount -u /var/lib/incus-lxcfs' >> /start.sh && \
     echo '  echo "Stopped lxcfs."' >> /start.sh && \
-    echo ' CHILD_PIDS=$(pgrep -P $$)' >> /start.sh && \
-    echo ' if [ -n "$CHILD_PIDS" ]; then' >> /start.sh && \
-    echo '   pkill -TERM -P $$' >> /start.sh && \
-    echo '   echo "Stopped child processes with PIDs: $CHILD_PIDS"' >> /start.sh && \
-    echo ' else' >> /start.sh && \
-    echo '   echo "No child processes found."' >> /start.sh && \
-    echo ' fi' >> /start.sh && \
+    echo '  CHILD_PIDS=$(pgrep -P $$)' >> /start.sh && \
+    echo '  if [ -n "$CHILD_PIDS" ]; then' >> /start.sh && \
+    echo '    pkill -TERM -P $$' >> /start.sh && \
+    echo '    echo "Stopped child processes with PIDs: $CHILD_PIDS"' >> /start.sh && \
+    echo '  else' >> /start.sh && \
+    echo '    echo "No child processes found."' >> /start.sh && \
+    echo '  fi' >> /start.sh && \
     echo '}' >> /start.sh && \
+# Map KVM GID if provided as an Environment Variable
+    echo 'if [ -n "$KVM_GID" ]; then' >> /start.sh && \
+    echo '  echo "Updating container kvm group to GID $KVM_GID to match host..."' >> /start.sh && \
+    echo '  groupmod -g "$KVM_GID" kvm || true' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
+# Environment Exports
     echo 'export PATH="/opt/incus/bin/:${PATH}"' >> /start.sh && \
     echo 'export INCUS_EDK2_PATH="/opt/incus/share/qemu/"' >> /start.sh && \
     echo 'export LD_LIBRARY_PATH="/opt/incus/lib/"' >> /start.sh && \
@@ -51,6 +55,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo 'export INCUS_LXC_HOOK="/opt/incus/share/lxc/hooks/"' >> /start.sh && \
     echo 'export INCUS_AGENT_PATH="/opt/incus/agent/"' >> /start.sh && \
     echo 'export INCUS_UI="/opt/incus/ui/"' >> /start.sh && \
+# Iptables handling
     echo 'if [ "$SETIPTABLES" = "true" ]; then' >> /start.sh && \
     echo '  if ! iptables-legacy -C DOCKER-USER -j ACCEPT &>/dev/null; then' >> /start.sh && \
     echo '    iptables-legacy -I DOCKER-USER -j ACCEPT' >> /start.sh && \
@@ -65,6 +70,7 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo '    ip6tables -I DOCKER-USER -j ACCEPT' >> /start.sh && \
     echo '  fi' >> /start.sh && \
     echo 'fi' >> /start.sh && \
+# Start services
     echo '  mkdir -p /var/lib/incus-lxcfs' >> /start.sh && \
     echo '  /opt/incus/bin/lxcfs /var/lib/incus-lxcfs --enable-loadavg --enable-cfs &' >> /start.sh && \
     echo '/usr/lib/systemd/systemd-udevd &' >> /start.sh && \
@@ -73,15 +79,5 @@ RUN echo "#!/bin/bash" > /sbin/systemctl && \
     echo 'sleep infinity' >> /start.sh && \    
     chmod +x /start.sh
 
-# Set environment variables
-#ENV PATH="/opt/incus/bin/:${PATH}"
-#ENV INCUS_EDK2_PATH="/opt/incus/share/qemu/"
-#ENV LD_LIBRARY_PATH="/opt/incus/lib/"
-#ENV INCUS_LXC_TEMPLATE_CONFIG="/opt/incus/share/lxc/config/"
-#ENV INCUS_DOCUMENTATION="/opt/incus/doc/"
-#ENV INCUS_LXC_HOOK="/opt/incus/share/lxc/hooks/"
-#ENV INCUS_AGENT_PATH="/opt/incus/agent/"
-#ENV INCUS_UI="/opt/incus/ui/"
-
-# Run the incusd binary
+# Run the incusd binary via start.sh
 CMD ["/start.sh"]
