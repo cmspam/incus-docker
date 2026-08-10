@@ -42,6 +42,7 @@ With Podman (needs root permissions) (recommended):
 ```
 sudo podman run -d \
 --name incus \
+--log-driver=none \
 --cgroups=no-conmon \
 --cgroupns=host \
 --security-opt unmask=/sys/fs/cgroup \
@@ -53,6 +54,13 @@ sudo podman run -d \
 --volume /lib/modules:/lib/modules:ro \
 ghcr.io/cmspam/incus-docker:latest
 ```
+
+Incus writes its daemon and instance logs under `/var/log/incus` and exposes
+its event stream through the Incus API. Disabling Podman's log driver also
+prevents long-lived LXC monitor processes from inheriting conmon's logging
+pipe. Otherwise replacing the daemon container while guests remain running
+can leave the old conmon waiting for those guests to close that pipe.
+
 With Docker:
 
 ```
